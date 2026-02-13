@@ -1,16 +1,28 @@
-# React + Vite
+# AgendaFlow Pro (JS)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plataforma **multi-tenant** de reservas con **realtime**, **roles** (admin/manager/staff), **detección de conflictos**, **auditoría** y UX "product-grade".
 
-Currently, two official plugins are available:
+## No negociables
+1) Multi-tenant estricto: sin lecturas/escrituras cross-tenant.  
+2) DB como árbitro: reglas críticas deben vivir en DB (RLS/constraints).  
+3) Server state != UI state: caching/invalidation; UI state mínimo.  
+4) A11y product-grade como “Done”.  
+5) Realtime robusto: dedupe + reconciliación + estrategia de conflictos.  
+6) Calidad verificable: testing plan + observabilidad + CI gates + documentación.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup
+```bash
+npm create vite@latest agendaflow-pro -- --template react
+cd agendaflow-pro
+npm install
+npm install tailwindcss @tailwindcss/vite
+npm install @tanstack/react-query @tanstack/react-query-devtools react-router-dom @supabase/supabase-js zod
+npm run dev
+```
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Estructura (boundaries)
+- `src/domain/`: reglas/invariantes puras (NO importa infra).
+- `src/infra/`: adaptadores a proveedores (Supabase).
+- `src/features/`: módulos por feature (API pública mínima).
+- `src/app/`: composición (router/providers).
+- `src/shared/`: primitives (env, tenant, etc.).
